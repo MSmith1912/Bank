@@ -43,7 +43,16 @@ public class UserTests {
         Optional<User> userFromMethod = userService.findByUserId(userFromDB.get().getUserId());
 
         assertEquals(userFromDB.get().getUserId(), userFromMethod.get().getUserId());
+    }
 
+
+    @Test
+    public void testThatAUserCanBeRetrievedByUsername() {
+        addUserToDataBase();
+        Optional<User> userFromDB = userService.findByUsername("admin1");
+        Optional<User> userFromMethod = userService.findByUsername(userFromDB.get().getUsername());
+
+        assertEquals(userFromDB.get().getUserId(), userFromMethod.get().getUserId());
     }
 
     private void addUserToDataBase() {
