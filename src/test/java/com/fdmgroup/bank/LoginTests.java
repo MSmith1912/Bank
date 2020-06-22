@@ -25,6 +25,7 @@ import java.util.Optional;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
 import static org.springframework.http.HttpMethod.POST;
 
 @ExtendWith(SpringExtension.class)
@@ -45,18 +46,24 @@ public class LoginTests {
         validatorFactory.close();
     }
 
-    private AuthenticationRequest signupDto = new AuthenticationRequest("harry", "1234", "Harry", "Wilson");
+    private AuthenticationRequest signupDto = new AuthenticationRequest("harry", "12345678", "Harry", "Wilson");
     private User user = new User(signupDto.getUsername(), signupDto.getPassword(), signupDto.getFirstname(), signupDto.getLastname(), new Role());
 
     @Autowired
     private TestRestTemplate restTemplate;
 
     @MockBean
-    private UserSecurityService service;
+    private UserSecurityService userSecurityService;
+
+    @Test
+    public void test_ThatValidUserCanSignIn() {
+        restTemplate.postForEntity("/login/LoginUser", new AuthenticationRequest("admin1", "password"), Void.class);
+        verify(this.userSecurityService).signin("admin1", "password");
+    }
 
     @Test
     public void registerUser(){
-        when(service.signup(signupDto.getUsername(), signupDto.getPassword(), signupDto.getFirstname(), signupDto.getLastname())).thenReturn(Optional.of(user));
+        when(userSecurityService.signup(signupDto.getUsername(), signupDto.getPassword(), signupDto.getFirstname(), signupDto.getLastname())).thenReturn(Optional.of(user));
 
         ResponseEntity<User> responseEntity = restTemplate.exchange("/login/RegisterUser", POST,
                 new HttpEntity<>(signupDto),

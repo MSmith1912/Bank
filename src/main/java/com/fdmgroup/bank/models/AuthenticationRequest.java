@@ -1,17 +1,17 @@
 package com.fdmgroup.bank.models;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.Objects;
 
-@Entity
+
 public class AuthenticationRequest {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "auth_gen")
-    @SequenceGenerator(name = "auth_gen", sequenceName = "AUTH_SEQ", allocationSize = 1)
-    private long authId;
-
+    @NotNull
     private String username;
+
+    @NotNull
+    @Size(min = 8, max = 15, message = "Password must be between 8 and 15 characters")
     private String password;
     private String firstname;
     private String lastname;
@@ -63,9 +63,6 @@ public class AuthenticationRequest {
         this.lastname = lastname;
     }
 
-    public long getAuthId() { return authId; }
-
-    public void setAuthId(long authId) { this.authId = authId; }
 
     @Override
     public boolean equals(Object o) {

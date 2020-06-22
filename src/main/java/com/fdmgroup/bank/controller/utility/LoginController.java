@@ -18,6 +18,13 @@ public class LoginController {
     @Autowired
     private UserSecurityService userSecurityService;
 
+    @PostMapping("/LoginUser")
+    @ResponseStatus(HttpStatus.OK)
+    public String loginUser(@RequestBody @Valid AuthenticationRequest authRequest) {
+        return userSecurityService.signin(authRequest.getUsername(), authRequest.getPassword()).orElseThrow(() ->
+                new HttpServerErrorException(HttpStatus.FORBIDDEN, "Login Failed"));
+    }
+
     @PostMapping("/RegisterUser")
     @ResponseStatus(HttpStatus.CREATED)
     public User registerUser(@RequestBody @Valid AuthenticationRequest authRequest) {

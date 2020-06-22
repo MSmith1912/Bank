@@ -7,6 +7,8 @@ import com.fdmgroup.bank.repository.UserDao;
 import com.fdmgroup.bank.security.JwtProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -36,7 +38,7 @@ public class UserSecurityService {
         this.jwtProvider = jwtProvider;
     }
 
-    public Optional<User> signup(String username, String password, String firstName, String lastName){
+    public Optional<User> signup(String username, String password, String firstName, String lastName) {
         Optional<User> user = Optional.empty();
         if (!userDao.findByUsername(username).isPresent()) {
             Optional<Role> role = roleDao.findByRoleName("ROLE_CUSTOMER");
@@ -47,6 +49,20 @@ public class UserSecurityService {
                     role.get())));
         }
         return user;
+    }
+
+    public Optional<String> signin(String username, String password) {
+        Optional<String> token = Optional.empty();
+        Optional<User> user = userDao.findByUsername(username);
+        if (user.isPresent()) {
+            try {
+                authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+                token = Optional.of(jwtProvider.createToken(username, user.get().getRoles()));
+            } catch (AuthenticationException e) {
+
+            }
+        }
+        return token;
     }
 
 }
