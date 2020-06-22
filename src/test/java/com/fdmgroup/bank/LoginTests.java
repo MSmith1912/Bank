@@ -13,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -24,8 +25,7 @@ import java.util.Optional;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 import static org.springframework.http.HttpMethod.POST;
 
 @ExtendWith(SpringExtension.class)
@@ -57,8 +57,14 @@ public class LoginTests {
 
     @Test
     public void test_ThatValidUserCanSignIn() {
-        restTemplate.postForEntity("/login/LoginUser", new AuthenticationRequest("admin1", "password"), Void.class);
-        verify(this.userSecurityService).signin("admin1", "password");
+        restTemplate.postForEntity("/login/LoginUser", new AuthenticationRequest("admin1", "12345678"), Void.class);
+        verify(this.userSecurityService).signin("admin1", "12345678");
+    }
+
+    @Test
+    public void test_ThatInvalidUserCannotSignIn() {
+        restTemplate.postForEntity("/login/LoginUser", new AuthenticationRequest("admin1", "1234567"), Void.class);
+        verifyNoInteractions(this.userSecurityService);
     }
 
     @Test
