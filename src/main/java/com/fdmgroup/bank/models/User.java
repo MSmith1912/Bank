@@ -1,6 +1,7 @@
 package com.fdmgroup.bank.models;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -23,14 +24,26 @@ public class User {
     @Column
     String lastname;
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_role", joinColumns =
+    @JoinColumn(name = "userId"), inverseJoinColumns =
+    @JoinColumn(name = "roleId"))
+    private List<Role> roles;
+
     public User() {
     }
 
-    public User(String username, String password, String firstname, String lastname) {
+    public User(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
+    public User(String username, String password, String firstname, String lastname, List<Role> roles) {
         this.username = username;
         this.password = password;
         this.firstname = firstname;
         this.lastname = lastname;
+        this.roles = roles;
     }
 
     public Long getUserId() {
@@ -73,6 +86,14 @@ public class User {
         this.lastname = lastname;
     }
 
+    public List<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -82,12 +103,13 @@ public class User {
                 Objects.equals(username, user.username) &&
                 Objects.equals(password, user.password) &&
                 Objects.equals(firstname, user.firstname) &&
-                Objects.equals(lastname, user.lastname);
+                Objects.equals(lastname, user.lastname) &&
+                Objects.equals(roles, user.roles);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userId, username, password, firstname, lastname);
+        return Objects.hash(userId, username, password, firstname, lastname, roles);
     }
 
     @Override
@@ -98,6 +120,7 @@ public class User {
                 ", password='" + password + '\'' +
                 ", firstname='" + firstname + '\'' +
                 ", lastname='" + lastname + '\'' +
+                ", roles=" + roles +
                 '}';
     }
 }

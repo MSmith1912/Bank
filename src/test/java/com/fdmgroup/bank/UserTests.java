@@ -55,6 +55,7 @@ public class UserTests {
         assertEquals(userFromDB.get().getUserId(), userFromMethod.get().getUserId());
     }
 
+
     private void addUserToDataBase() {
         User newUser = new User();
         newUser.setUsername("admin1");
