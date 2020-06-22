@@ -1,8 +1,15 @@
 package com.fdmgroup.bank.models;
 
+import javax.persistence.*;
 import java.util.Objects;
 
+@Entity
 public class AuthenticationRequest {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "auth_gen")
+    @SequenceGenerator(name = "auth_gen", sequenceName = "AUTH_SEQ", allocationSize = 1)
+    private long authId;
 
     private String username;
     private String password;
@@ -55,6 +62,10 @@ public class AuthenticationRequest {
     public void setLastname(String lastname) {
         this.lastname = lastname;
     }
+
+    public long getAuthId() { return authId; }
+
+    public void setAuthId(long authId) { this.authId = authId; }
 
     @Override
     public boolean equals(Object o) {

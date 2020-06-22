@@ -25,15 +25,14 @@ public class UserTests {
         User newUser = new User();
         newUser.setUsername("admin1");
         newUser.setPassword("password");
-        newUser.setFirstname("Harry");
-        newUser.setLastname("Styles");
+        newUser.setFirstName("Harry");
+        newUser.setLastName("Styles");
 
         userService.save(newUser);
 
         List<User> allUsers = userService.findAll();
 
         assert(allUsers.size() > 0);
-
     }
 
     @Test
@@ -45,7 +44,6 @@ public class UserTests {
         assertEquals(userFromDB.get().getUserId(), userFromMethod.get().getUserId());
     }
 
-
     @Test
     public void testThatAUserCanBeRetrievedByUsername() {
         addUserToDataBase();
@@ -55,14 +53,12 @@ public class UserTests {
         assertEquals(userFromDB.get().getUserId(), userFromMethod.get().getUserId());
     }
 
-
     private void addUserToDataBase() {
         User newUser = new User();
         newUser.setUsername("admin1");
         newUser.setPassword("password");
-        newUser.setFirstname("Admin");
-        newUser.setLastname("Administrator");
-
+        newUser.setFirstName("Admin");
+        newUser.setLastName("Administrator");
         userService.save(newUser);
     }
 
