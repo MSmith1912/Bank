@@ -68,6 +68,17 @@ public class LoginTests {
     }
 
     @Test
+    public void registerInvalid() {
+        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
+        when(userSecurityService.signup(authenticationRequest.getUsername(), authenticationRequest.getPassword(), authenticationRequest.getFirstname(), authenticationRequest.getLastname())).thenReturn(Optional.of(user));
+
+        ResponseEntity<User> responseEntity = restTemplate.exchange("/login/RegisterUser", POST,
+                new HttpEntity<>(authenticationRequest),
+                User.class);
+        assertThat(responseEntity.getStatusCode().value(), is(400));
+    }
+
+    @Test
     public void registerUser(){
         when(userSecurityService.signup(signupDto.getUsername(), signupDto.getPassword(), signupDto.getFirstname(), signupDto.getLastname())).thenReturn(Optional.of(user));
 
