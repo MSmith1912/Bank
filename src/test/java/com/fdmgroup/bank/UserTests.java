@@ -7,11 +7,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertEquals;
 
 import java.util.List;
 import java.util.Optional;
+
+import static org.junit.Assert.*;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -33,6 +33,12 @@ public class UserTests {
         List<User> allUsers = userService.findAll();
 
         assert(allUsers.size() > 0);
+    }
+
+    @Test
+    public void test_ThatAllUsersCanBeRetrieved(){
+        List<User> allUsers = userService.findAll();
+        assertTrue(allUsers.size() > 0);
     }
 
     @Test

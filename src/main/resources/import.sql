@@ -1,0 +1,2 @@
+insert into Users(userId, username, password, firstname, lastname) values (USER_SEQ.nextval, 'admin1', 'password', 'John', 'Smith');
+insert into Users(userId, username, password, firstname, lastname) values (USER_SEQ.nextval, 'admin1', 'password', 'Sandra', 'Smith');
