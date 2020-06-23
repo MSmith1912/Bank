@@ -1,6 +1,7 @@
 package com.fdmgroup.bank.models;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 
 @Entity
 public class Account {
@@ -10,6 +11,24 @@ public class Account {
     @SequenceGenerator(name = "account_gen", sequenceName = "ACCOUNT_SEQ", allocationSize = 1)
     private long accountId;
 
+    private long customerId;
+
+    private BigDecimal balance;
+
     public Account() {
     }
+
+    public Account(long customerId, BigDecimal balance) {
+        this.customerId = customerId;
+        this.balance = balance;
+    }
+
+    public BigDecimal credit(BigDecimal funds) {
+        if(funds.signum() != -1) {
+            balance = balance.add(funds);
+        }
+        return balance;
+    }
+
+
 }
