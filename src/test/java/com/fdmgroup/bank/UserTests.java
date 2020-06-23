@@ -1,5 +1,6 @@
 package com.fdmgroup.bank;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fdmgroup.bank.models.User;
 import com.fdmgroup.bank.services.UserService;
@@ -74,6 +75,15 @@ public class UserTests {
         assert(allUsers.size() > 0);
     }
 
+    @Test
+    public void test_ThatValidUserCanBeAdded() throws Exception {
+        User user = new User();
+        this.mockMvc.perform(post(USER_ROOT_URI + "/AddUser")
+            .session(session)
+            .contentType("application/json")
+            .content(objectMapper.writeValueAsString(user)))
+                .andExpect(status().isOk());
+    }
 
     //database set up test
     @Test
