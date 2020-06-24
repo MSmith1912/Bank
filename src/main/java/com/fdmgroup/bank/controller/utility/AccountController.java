@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+
 @RestController
 @RequestMapping("/accounts")
 @CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*")
@@ -16,6 +18,11 @@ public class AccountController {
 
     @PutMapping("/Credit")
     public ResponseEntity<Account> creditAccount(@RequestBody Account account) {
+        return ResponseEntity.ok(accountService.save(account));
+    }
+
+    @PutMapping("/Debit")
+    public ResponseEntity<Account> debitAccount(@RequestBody Account account) {
         return ResponseEntity.ok(accountService.save(account));
     }
 

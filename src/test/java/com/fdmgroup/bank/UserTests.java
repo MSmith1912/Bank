@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.test.web.servlet.setup.SharedHttpSessionConfigurer;
 import org.springframework.web.context.WebApplicationContext;
 
+import javax.xml.transform.Result;
 import java.util.List;
 import java.util.Optional;
 
@@ -75,7 +76,7 @@ public class UserTests {
 
         assert(allUsers.size() > 0);
     }
-
+    //Mvc test
     @Test
     public void test_ThatValidUserCanBeAdded() throws Exception {
         User user = new User();
@@ -86,12 +87,6 @@ public class UserTests {
                 .andExpect(status().isOk());
     }
 
-    //database set up test
-    @Test
-    public void test_ThatAllUsersCanBeRetrieved(){
-        List<User> allUsers = userService.findAll();
-        assertTrue(allUsers.size() > 0);
-    }
 
     //database set up test
     @Test
@@ -103,6 +98,7 @@ public class UserTests {
         assertEquals(userFromDB.get().getUserId(), userFromMethod.get().getUserId());
     }
 
+
     //database set up test
     @Test
     public void test_ThatAUserCanBeRetrievedByUsername() {
@@ -112,9 +108,9 @@ public class UserTests {
 
         assertEquals(userFromDB.get().getUserId(), userFromMethod.get().getUserId());
     }
-
+    //Mvc test
     @Test
-    public void test_ThatAUserExists_andCanBeReturned() throws Exception {
+    public void test_ThatAUserExists_andCanBeReturnedByUsername() throws Exception {
         addUserToDataBase();
         ResultActions mvcResult = this.mockMvc.perform(get(USER_ROOT_URI + "/SeeUser/user1")
             .session(session))
@@ -125,12 +121,14 @@ public class UserTests {
         assertEquals(mvcResult.andReturn().getResponse().getContentAsString(), expectedResult);
     }
 
+
+    //database set up test
     @Test
     public void test_ThatAListOfUsersIsReturned() {
         List<User> allUsers = userService.findAll();
         assert(allUsers.size() > 0);
     }
-
+    //Mvc test
     @Test
     public void test_ThatAPageOfUsersIsReturned() throws Exception {
         List<User> allUsers = userService.findAll();

@@ -13,6 +13,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.test.web.servlet.setup.SharedHttpSessionConfigurer;
 import org.springframework.web.context.WebApplicationContext;
@@ -71,13 +72,27 @@ public class AccountTests {
         Optional<Account> accountToCredit = accountService.findByAccountId(1L);
         accountToCredit.get().credit(new BigDecimal("100.00"));
 
-        this.mockMvc.perform(put(ACCOUNT_ROOT_URI + "/Credit/")
+        ResultActions result= this.mockMvc.perform(put(ACCOUNT_ROOT_URI + "/Credit")
                 .session(session)
                 .contentType("application/json")
                 .content(objectMapper.writeValueAsString(accountToCredit)))
                 .andExpect(status().isOk());
-        Account updatedAccount = accountService.findByAccountId(1L).get();
-        Assertions.assertNotEquals(accountToCredit, updatedAccount);
+        String expectedResult = "{\"accountId\":1,\"customerId\":1,\"balance\":600.00}";
+        Assertions.assertEquals(result.andReturn().getResponse().getContentAsString(), expectedResult);
+    }
+
+    @Test
+    public void test_ThatAnAccountCanBeDebited() throws Exception {
+        Optional<Account> accountToDebit = accountService.findByAccountId(1L);
+        accountToDebit.get().debit(new BigDecimal("100.00"));
+
+        ResultActions result= this.mockMvc.perform(put(ACCOUNT_ROOT_URI + "/Debit")
+                .session(session)
+                .contentType("application/json")
+                .content(objectMapper.writeValueAsString(accountToDebit)))
+                .andExpect(status().isOk());
+        String expectedResult = "{\"accountId\":1,\"customerId\":1,\"balance\":400.00}";
+        Assertions.assertEquals(expectedResult, result.andReturn().getResponse().getContentAsString());
     }
 
 
