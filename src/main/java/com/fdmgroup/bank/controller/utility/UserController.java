@@ -25,6 +25,15 @@ public class UserController {
         return ResponseEntity.ok(userService.findAll(page, size));
     }
 
+    @GetMapping("/SeeUser/{username}")
+    public ResponseEntity<User> seeUser(@PathVariable("username") String username) {
+        Optional<User> user = userService.findByUsername(username);
+        if(user.isPresent()) {
+            return new ResponseEntity<>(user.get(), HttpStatus.FOUND);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
     @PostMapping("/AddUser")
     public ResponseEntity<HttpStatus> addUser(@RequestBody User user) {
         Optional<User> userFromDB = userService.findByUserId(user.getUserId());

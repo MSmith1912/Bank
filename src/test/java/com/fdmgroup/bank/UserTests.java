@@ -14,6 +14,7 @@ import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.test.web.servlet.setup.SharedHttpSessionConfigurer;
 import org.springframework.web.context.WebApplicationContext;
@@ -113,6 +114,24 @@ public class UserTests {
     }
 
     @Test
+    public void test_ThatAUserExists_andCanBeReturned() throws Exception {
+        addUserToDataBase();
+        ResultActions mvcResult = this.mockMvc.perform(get(USER_ROOT_URI + "/SeeUser/user1")
+            .session(session))
+            .andExpect(status().isFound());
+
+        String expectedResult = "{\"userId\":5,\"username\":\"user1\",\"password\":\"password\",\"firstName\":\"Admin\",\"lastName\":\"Administrator\",\"roles\":[]}";
+
+        assertEquals(mvcResult.andReturn().getResponse().getContentAsString(), expectedResult);
+    }
+
+    @Test
+    public void test_ThatAListOfUsersIsReturned() {
+        List<User> allUsers = userService.findAll();
+        assert(allUsers.size() > 0);
+    }
+
+    @Test
     public void test_ThatAPageOfUsersIsReturned() throws Exception {
         List<User> allUsers = userService.findAll();
 
@@ -127,7 +146,7 @@ public class UserTests {
 
     private void addUserToDataBase() {
         User newUser = new User();
-        newUser.setUsername("admin1");
+        newUser.setUsername("user1");
         newUser.setPassword("password");
         newUser.setFirstName("Admin");
         newUser.setLastName("Administrator");
