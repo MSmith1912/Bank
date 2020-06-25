@@ -22,6 +22,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -65,6 +66,14 @@ public class AccountTests {
         List<Account> numberOfAccountsAfter = accountService.findAll();
 
         assertNotEquals(numberOfAccountsBefore, numberOfAccountsAfter);
+    }
+
+    @Test
+    public void test_ThatAnAccountBalanceCanBeRetreived() {
+        Account account = new Account(1, new BigDecimal("500.00"));
+        accountService.save(account);
+        BigDecimal balance = accountService.getBalance(account.getAccountId());
+        assertEquals(balance, new BigDecimal("500.00"));
     }
 
     @Test
